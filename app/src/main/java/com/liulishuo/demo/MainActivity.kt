@@ -1,8 +1,12 @@
 package com.liulishuo.demo
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
@@ -19,11 +23,26 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
     lateinit var string: String
+    lateinit var viewModel: MyViewModel
+    lateinit var sp: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-         btn_1.setOnClickListener {
+        sp = getPreferences(Context.MODE_PRIVATE)
+        val countsave = sp.getInt("countsave",0)
+        viewModel =ViewModelProviders.of(this, MainViewModelFactory(countsave)).get(MyViewModel::class.java)
 
+        lifecycle.addObserver(MyObserver(lifecycle))
+
+        //监听数据变化并作出应变
+        viewModel.count.observe(this, androidx.lifecycle.Observer { countsave ->
+           TODO("更新UI")
+        })
+
+        viewModel.plusOne()
+        viewModel.clear()
+
+         btn_1.setOnClickListener {
 //             val retrofit =Retrofit.Builder()
 //                 .baseUrl("")
 //                 .addConverterFactory(GsonConverterFactory.create())
@@ -83,10 +102,6 @@ class MainActivity : AppCompatActivity() {
                          TODO("Not yet implemented")
                      }
                  })
-
-
-
-
          }
     }
 

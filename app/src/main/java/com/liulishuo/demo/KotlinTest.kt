@@ -37,10 +37,16 @@ class KotlinTest {
 }
 
     fun main() {
-        val str: String?=null
-//        str.startsWith("na")
-        val a = 10
-        print("a=$a")
+
+        var intArray = IntArray(50)
+        var count=0
+        for (i in 1..10){
+            for (j in i+1..10){
+                if (intArray[i]+intArray[j]==0)
+                    count++
+            }
+        }
+        println(count)
     }
 
     fun test(param1: Int, param2: Int): Int {
